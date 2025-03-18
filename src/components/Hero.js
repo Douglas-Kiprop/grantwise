@@ -1,82 +1,70 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Hero = () => {
   const heroStyle = {
-    height: '600px',
-    backgroundImage: `linear-gradient(rgba(70, 70, 70, 0.6), rgba(40, 40, 40, 0.7)), url("https://images.pexels.com/photos/15496542/pexels-photo-15496542.jpeg")`,
+    backgroundImage: `url("https://images.pexels.com/photos/15496542/pexels-photo-15496542.jpeg?auto=compress&cs=tinysrgb&w=1920")`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: '600px',
     position: 'relative',
-  };
-
-  const headingStyle = {
-    color: 'white',
-    fontSize: '48px',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     textAlign: 'center',
-    marginBottom: '1rem',
-    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
-  };
-
-  const subheadingStyle = {
     color: 'white',
-    fontSize: '20px',
-    textAlign: 'center',
-    marginBottom: '2rem',
-    maxWidth: '800px',
-    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)',
   };
 
-  const ctaButtonStyle = {
-    padding: '15px 30px',
-    color: 'white',
-    backgroundColor: 'rgba(51, 51, 51, 0.8)',
-    border: '2px solid white',
-    borderRadius: '5px',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    fontSize: '18px',
-    transition: 'all 0.3s ease',
-    cursor: 'pointer',
+  const overlayStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   };
 
-  const ctaHoverStyle = {
-    backgroundColor: 'white',
-    color: '#333',
+  const contentStyle = {
+    position: 'relative',
+    zIndex: 1,
+    padding: '0 20px',
   };
 
   return (
     <div style={heroStyle}>
-      <h1 style={headingStyle}>AI Powered Grant Finder</h1>
-      <p style={subheadingStyle}>
-        Discover the perfect funding opportunities for your projects in Kenya with our intelligent grant matching system
-      </p>
-      <a 
-        href="#featured-grants" 
-        style={ctaButtonStyle}
-        onClick={(e) => {
-          e.preventDefault();
-          document.getElementById('featured-grants').scrollIntoView({ 
-            behavior: 'smooth' 
-          });
-        }}
-        onMouseOver={(e) => {
-          e.target.style.backgroundColor = 'white';
-          e.target.style.color = '#333';
-        }}
-        onMouseOut={(e) => {
-          e.target.style.backgroundColor = 'rgba(51, 51, 51, 0.8)';
-          e.target.style.color = 'white';
-        }}
-      >
-        Explore Grants
-      </a>
+      <div style={overlayStyle}></div>
+      <div style={contentStyle}>
+        <h1 style={{ fontSize: '3rem', marginBottom: '1rem', fontWeight: 'bold' }}>
+          AI POWERED GRANT FINDER
+        </h1>
+        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', maxWidth: '800px', margin: '0 auto 2rem' }}>
+          Discover the perfect funding opportunities for your projects in Kenya with our intelligent grant matching system
+        </p>
+        <button 
+          style={{
+            padding: '10px 30px',
+            border: '2px solid white',
+            borderRadius: '4px',
+            backgroundColor: 'transparent',
+            color: 'white',
+            fontSize: '1.1rem',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseOver={(e) => {
+            e.target.style.backgroundColor = 'white';
+            e.target.style.color = 'black';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.backgroundColor = 'transparent';
+            e.target.style.color = 'white';
+          }}
+          onClick={() => {
+            document.getElementById('featured-grants').scrollIntoView({ behavior: 'smooth' });
+          }}
+        >
+          Explore Now
+        </button>
+      </div>
     </div>
   );
 };
