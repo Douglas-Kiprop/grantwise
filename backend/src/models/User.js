@@ -12,77 +12,49 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
-    lowercase: true
+    trim: true
   },
   password: {
     type: String,
     required: true
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
   profile: {
-    firstName: String,
-    lastName: String,
+    interests: [String],
     organization: String,
-    position: String,
-    bio: String,
     phone: String,
-    interests: [{
-      type: String,
-      enum: ['Youth', 'Business', 'NGO', 'Education']
-    }],
-    location: {
-      country: String,
-      city: String
-    },
-    avatar: String
+    name: String
   },
   savedGrants: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Grant'
   }],
   appliedGrants: [{
-    grant: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Grant'
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'submitted', 'accepted', 'rejected'],
-      default: 'pending'
-    },
-    appliedDate: {
-      type: Date,
-      default: Date.now
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Grant'
   }],
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
   createdAt: {
     type: Date,
     default: Date.now
-  },
-  lastLogin: Date
+  }
 });
 
-// Existing password hashing middleware
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
-
-// Existing password comparison method
+// Add this method back to the schema
 userSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
-// Add indexes
+// Remove the duplicate indexes and keep only these
 userSchema.index({ username: 1 });
 userSchema.index({ email: 1 });
-userSchema.index({ 'profile.interests': 1 });
 
 const User = mongoose.model('User', userSchema);
 

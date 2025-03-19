@@ -9,12 +9,22 @@ const grantRoutes = require('./src/routes/grantRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const profileRoutes = require('./src/routes/profileRoutes');
 const applicationRoutes = require('./src/routes/applicationRoutes');
+const userPreferenceRoutes = require('./src/routes/userPreferenceRoutes');
+const notificationRoutes = require('./src/routes/notificationRoutes');
+const { scheduleDeadlineChecks } = require('./src/utils/scheduler');
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+// Update CORS configuration
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
+}));
 app.use(helmet());
 app.use(morgan('dev'));
 
@@ -28,18 +38,22 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-// Test route (add this before other routes)
-app.get('/api/profile/test', (req, res) => {
-  res.json({ message: 'Profile route is working' });
-});
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/grants', grantRoutes);
+// Add this line with your other route declarations
 app.use('/api/profile', profileRoutes);
-
-// Add this with other routes
 app.use('/api/applications', applicationRoutes);
+app.use('/api/preferences', userPreferenceRoutes);
+app.use('/api/notifications', notificationRoutes);
+
+// Serve static files from React app in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('frontend/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  });
+}
 
 // Basic health check route
 app.get('/api/health', (req, res) => {
@@ -51,6 +65,9 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
+
+// Start the scheduler
+scheduleDeadlineChecks();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

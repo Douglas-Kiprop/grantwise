@@ -1,74 +1,79 @@
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
-// Get user profile
-exports.getProfile = async (req, res) => {
+const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id)
-      .select('-password')
-      .populate('savedGrants')
-      .populate('appliedGrants.grant');
+    console.log('User ID from token:', req.user.userId); // Debug line
+    
+    const user = await User.findById(req.user.userId).select('-password');
+    console.log('Found user:', user); // Debug line
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Profile error:', error); // Debug line
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Update profile
-exports.updateProfile = async (req, res) => {
+// Update user profile
+const updateProfile = async (req, res) => {
   try {
-    const updates = {
-      'profile.firstName': req.body.firstName,
-      'profile.lastName': req.body.lastName,
-      'profile.organization': req.body.organization,
-      'profile.position': req.body.position,
-      'profile.bio': req.body.bio,
-      'profile.phone': req.body.phone,
-      'profile.interests': req.body.interests,
-      'profile.location': req.body.location
-    };
-
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $set: updates },
-      { new: true, runValidators: true }
-    ).select('-password');
-
-    res.json(user);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-// Save grant
-exports.saveGrant = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $addToSet: { savedGrants: req.params.grantId } },
-      { new: true }
-    ).select('-password');
+    const { name, organization, phone } = req.body;
+    const user = await User.findById(req.user.userId);
     
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (name) user.name = name;
+    if (organization) user.organization = organization;
+    if (phone) user.phone = phone;
+
+    await user.save();
     res.json(user);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Remove saved grant
-exports.removeSavedGrant = async (req, res) => {
+const updatePassword = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $pull: { savedGrants: req.params.grantId } },
-      { new: true }
-    ).select('-password');
-    
-    res.json(user);
+    console.log('Password update request received:', req.body);
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.userId);
+
+    console.log('User found:', user ? 'Yes' : 'No');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if current password is correct
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    console.log('Password match:', isMatch);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    await user.save();
+    console.log('Password updated successfully');
+    res.json({ message: 'Password updated successfully' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Password update error:', error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
   }
+};
+
+module.exports = {
+  getProfile,
+  updateProfile,
+  updatePassword
 };
