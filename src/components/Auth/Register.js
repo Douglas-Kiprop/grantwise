@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mui/material';
 import axios from 'axios';
+import { validatePassword } from '../../utils/passwordValidation';
+import PasswordStrengthIndicator from '../common/PasswordStrengthIndicator';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,10 +24,13 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    
+    const validation = validatePassword(formData.password);
+    if (!validation.isValid) {
+      setError(validation.errors.join('\n'));
       return;
     }
+
     try {
       await axios.post('http://localhost:5000/api/auth/register', formData);
       navigate('/login');
@@ -71,10 +76,10 @@ const Register = () => {
               name="password"
               label="Password"
               type="password"
-              id="password"
               value={formData.password}
               onChange={handleChange}
             />
+            <PasswordStrengthIndicator password={formData.password} />
             <TextField
               margin="normal"
               required

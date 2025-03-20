@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Container, 
-  Paper, 
-  TextField, 
-  Button, 
-  Typography, 
-  Box,
-  Alert
-} from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom'; // Make sure useNavigate is imported
+import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // This should now be properly defined
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -33,7 +25,8 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
       login(response.data.token);
-      navigate('/dashboard');
+      console.log('Login successful, navigating to dashboard...');
+      navigate('/dashboard'); // Updated to match the route in App.js
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
@@ -41,17 +34,8 @@ const Login = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+      <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography component="h1" variant="h5">Login</Typography>
         <Paper elevation={3} sx={{ p: 4, mt: 3, width: '100%' }}>
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           <form onSubmit={handleSubmit}>
@@ -79,13 +63,18 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
             />
+            <Box sx={{ mt: 2, textAlign: 'right' }}>
+              <Link to="/reset-password" style={{ textDecoration: 'none', color: '#1976d2' }}>
+                Forgot password?
+              </Link>
+            </Box>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Login
             </Button>
           </form>
         </Paper>

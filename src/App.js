@@ -1,43 +1,48 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Navigation from './components/Navigation/Navigation';
-import Home from './components/Home/Home';
+import DashboardHome from './components/Home/Home';
+import Landing from './pages/Landing';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import Profile from './components/Profile/Profile';
 import GrantList from './components/Grants/GrantList';
 import GrantDetail from './components/Grants/GrantDetail';
-import Profile from './components/Profile/Profile';
-import Dashboard from './components/Dashboard/Dashboard';
 import PrivateRoute from './components/Auth/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
+import ResetPassword from './components/Auth/ResetPassword';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Navigation />
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* Public routes */}
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/grants" element={<GrantList />} />
-          <Route path="/grants/:id" element={<GrantDetail />} />
-          <Route 
-            path="/profile" 
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
-            path="/dashboard" 
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            } 
-          />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
+          {/* Protected routes */}
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <DashboardHome />
+            </PrivateRoute>
+          } />
+          <Route path="/grants" element={
+            <PrivateRoute>
+              <GrantList />
+            </PrivateRoute>
+          } />
+          <Route path="/grants/:id" element={
+            <PrivateRoute>
+              <GrantDetail />
+            </PrivateRoute>
+          } />
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          } />
         </Routes>
       </Router>
     </AuthProvider>

@@ -1,32 +1,78 @@
 import React from 'react';
+import { Box, Container, Typography, Grid, Paper } from '@mui/material';
 
 const About = () => {
   return (
-    <section id="about-section" className="bg-[#333] py-16 px-5 text-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-8 items-center">
-          <div className="md:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Empowering Kenyans with Funding Opportunities
-            </h2>
-            <p className="text-gray-200 leading-relaxed text-base md:text-lg">
-              Our mission is to make grant discovery seamless for Kenyan individuals, 
-              businesses, and organizations. We believe in connecting ambitious projects 
-              with the right funding opportunities, fostering innovation and growth 
-              across the nation. Through our platform, we aim to simplify the grant 
-              discovery process and help turn promising ideas into reality.
-            </p>
-          </div>
-          <div className="md:w-1/2">
-            <img 
-              src="https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=600" 
-              alt="Empowering Kenyans with funding opportunities" 
-              className="w-full rounded-lg shadow-md hover:shadow-xl transition-all duration-300"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
+    <Box sx={{ 
+      py: 6, 
+      bgcolor: '#333333'  // Dark grey
+    }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={4} alignItems="center">
+          <Grid item xs={12} md={6}>
+            <Box sx={{ pr: { md: 4 } }}>
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 600,
+                  mb: 2,
+                  color: '#ffffff',  // White text for dark background
+                  fontSize: '1.8rem'
+                }}
+              >
+                Empowering Kenyans with Funding Opportunities
+              </Typography>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontSize: '1rem',
+                  lineHeight: 1.6,
+                  color: '#e0e0e0',  // Light grey text for readability
+                  mb: 2
+                }}
+              >
+                Our mission is to make grant discovery seamless for Kenyan individuals, 
+                businesses, and organizations. We believe in connecting ambitious projects 
+                with the right funding opportunities, fostering innovation and growth 
+                across the nation.
+              </Typography>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontSize: '1rem',
+                  lineHeight: 1.6,
+                  color: '#e0e0e0'  // Light grey text for readability
+                }}
+              >
+                Through our platform, we aim to simplify the grant 
+                discovery process and help turn promising ideas into reality.
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={2} sx={{ 
+              overflow: 'hidden',
+              borderRadius: 2,
+              transition: 'transform 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'scale(1.01)'
+              }
+            }}>
+              <img 
+                src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg"
+                alt="Team collaborating on projects"
+                style={{
+                  width: '100%',
+                  height: '400px',
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 

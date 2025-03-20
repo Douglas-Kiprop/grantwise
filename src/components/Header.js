@@ -1,7 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
+  const location = useLocation();
+  const { logout } = useAuth(); // Removed 'user' since it's not being used
+  const isLandingPage = location.pathname === '/';
+  
   const headerStyle = {
     position: 'absolute',
     top: 0,
@@ -11,45 +16,61 @@ const Header = () => {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    zIndex: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1000,
+    background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent)',
   };
 
   const logoStyle = {
     color: 'white',
     textDecoration: 'none',
-    fontSize: '1.5rem',
+    fontSize: '24px',
     fontWeight: 'bold',
   };
 
   const navStyle = {
     display: 'flex',
-    gap: '20px',
-    marginRight: '60px',  // Increased from 20px to 60px to move links left
+    gap: '30px',
+    marginRight: '80px', // Add margin to move links left from the edge
   };
 
   const linkStyle = {
     color: 'white',
     textDecoration: 'none',
-    transition: 'opacity 0.3s ease',
+    transition: 'color 0.3s ease',
   };
 
   const handleMouseOver = (e) => {
-    e.target.style.opacity = '0.8';
+    e.target.style.color = '#ddd';
   };
 
   const handleMouseOut = (e) => {
-    e.target.style.opacity = '1';
+    e.target.style.color = 'white';
   };
 
   return (
     <header style={headerStyle}>
       <Link to="/" style={logoStyle}>Grantwise</Link>
       <nav style={navStyle}>
-        <Link to="/" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Home</Link>
-        <Link to="/grants" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Grants</Link>
-        <a href="#about-section" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>About</a>
-        <a href="#footer" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Contact</a>
+        {isLandingPage ? (
+          <>
+            <a href="#about-section" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>About</a>
+            <Link to="/login" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Login</Link>
+            <Link to="/register" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Register</Link>
+          </>
+        ) : (
+          <>
+            <Link to="/dashboard" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Home</Link>
+            <Link to="/profile" style={linkStyle} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Profile</Link>
+            <button 
+              onClick={logout} 
+              style={{...linkStyle, border: 'none', background: 'none', cursor: 'pointer'}}
+              onMouseOver={handleMouseOver} 
+              onMouseOut={handleMouseOut}
+            >
+              Logout
+            </button>
+          </>
+        )}
       </nav>
     </header>
   );
