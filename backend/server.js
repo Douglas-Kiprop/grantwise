@@ -21,13 +21,11 @@ app.use(express.json());
 // Update CORS to allow your Vercel frontend domain
 // Update CORS configuration
 app.use(cors({
-  origin: ['https://grantwise.vercel.app', 'http://localhost:3000'],
+  origin: ['https://grantwise-1sjg36k8d-808dawgs-projects.vercel.app', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
-  sameSite: 'none',
-  secure: true
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
 }));
 app.use(helmet());
 app.use(morgan('dev'));
