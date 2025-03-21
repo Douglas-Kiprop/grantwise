@@ -4,6 +4,7 @@ import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mu
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api'; // Import the api utility instead of axios
 
+// Remove or comment out the PasswordStrengthIndicator line in the form
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
@@ -97,7 +98,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
             />
-            <PasswordStrengthIndicator password={formData.password} />
+            {/* Remove the PasswordStrengthIndicator component */}
             <TextField
               margin="normal"
               required
