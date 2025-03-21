@@ -18,9 +18,9 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-// Update CORS configuration
+// Update CORS to allow your Vercel frontend domain
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'https://grantwise.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -48,13 +48,18 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/preferences', userPreferenceRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-// Serve static files from React app in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('frontend/build'));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-  });
-}
+// Remove or modify the static file serving since frontend is on Vercel
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static('frontend/build'));
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+//   });
+// }
+
+// Add a root route
+app.get('/', (req, res) => {
+  res.json({ message: 'GrantWise API is running' });
+});
 
 // Basic health check route
 app.get('/api/health', (req, res) => {
