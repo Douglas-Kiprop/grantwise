@@ -1,13 +1,18 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' 
-    ? 'https://grantwise.onrender.com/api'
-    : 'http://localhost:5000/api',
+  // Temporarily force production URL
+  baseURL: 'https://grantwise.onrender.com/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
   }
+});
+
+// Add request interceptor to log the URL being used
+api.interceptors.request.use(request => {
+  console.log('API Request URL:', request.baseURL + request.url);
+  return request;
 });
 
 // Add an interceptor to log errors
