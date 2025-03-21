@@ -66,14 +66,14 @@ exports.login = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email
-      }
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
     });
+    
+    res.json({ token, user });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
