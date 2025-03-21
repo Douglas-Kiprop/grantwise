@@ -33,24 +33,21 @@ const Register = () => {
     }
     
     try {
-      // Use the api utility instead of direct axios call
-      const response = await api.post('/auth/register', {
+      // Call the register function from AuthContext directly
+      const success = await register({
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
       
-      console.log('Registration response:', response.data);
-      
-      if (response.data.token) {
-        // Use the login function from AuthContext
-        register(response.data);
+      if (success) {
         console.log('Registration successful, navigating to dashboard...');
-        
-        // Force navigation with window.location
-        window.location.href = '/dashboard';
+        // Add a small delay before navigation
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 500);
       } else {
-        setError('Registration failed: No token received');
+        setError('Registration failed');
       }
     } catch (err) {
       console.error('Registration error details:', err);

@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('token', response.data.token);
         setUser(response.data.user);
         setAuthState({ token: response.data.token, isAuthenticated: true });
+        console.log('Registration successful, token set:', response.data.token);
         return true;
       }
     } catch (error) {
