@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import api from '../utils/api';  // Add this import
+import api from '../utils/api';
 
 const AuthContext = createContext(null);
 
@@ -10,19 +10,20 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!localStorage.getItem('token')
   });
 
-  const login = async (email, password) => {
+  // This is the function used by the Login component
+  const login = async (token) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        setUser(response.data.user);
-        setAuthState({ token: response.data.token, isAuthenticated: true });
-        console.log('Token set in AuthContext:', response.data.token);
-        return true;
-      }
+      localStorage.setItem('token', token);
+      console.log('Setting token in AuthContext:', token);
+      setAuthState({ token, isAuthenticated: true });
+      
+      // Add a delay to ensure state is updated before navigation
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      return true;
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
-      throw error;
+      console.error('Error in login function:', error);
+      return false;
     }
   };
 
