@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mui/material';
-import axios from 'axios';
-import { validatePassword } from '../../utils/passwordValidation';
-import PasswordStrengthIndicator from '../common/PasswordStrengthIndicator';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api'; // Import the api utility instead of axios
 
 const Register = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',  // Changed from 'name' to 'username'
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -25,16 +25,34 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const validation = validatePassword(formData.password);
-    if (!validation.isValid) {
-      setError(validation.errors.join('\n'));
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
-
+    
     try {
-      await axios.post('http://localhost:5000/api/auth/register', formData);
-      navigate('/login');
+      // Use the api utility instead of direct axios call
+      const response = await api.post('/auth/register', {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
+      });
+      
+      console.log('Registration response:', response.data);
+      
+      if (response.data.token) {
+        // Use the login function from AuthContext
+        register(response.data);
+        console.log('Registration successful, navigating to dashboard...');
+        
+        // Force navigation with window.location
+        window.location.href = '/dashboard';
+      } else {
+        setError('Registration failed: No token received');
+      }
     } catch (err) {
+      console.error('Registration error details:', err);
       setError(err.response?.data?.message || 'Registration failed');
     }
   };
