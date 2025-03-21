@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Make sure useNavigate is imported
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mui/material';
-import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api'; // Import the api utility instead of axios
+
+// Add debug line
+console.log('Current API URL:', process.env.NODE_ENV, process.env.REACT_APP_API_URL);
 
 const Login = () => {
-  const navigate = useNavigate(); // This should now be properly defined
+  const navigate = useNavigate();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -23,10 +26,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      // Use the api utility instead of direct axios call with hardcoded URL
+      const response = await api.post('/auth/login', formData);
       login(response.data.token);
       console.log('Login successful, navigating to dashboard...');
-      navigate('/dashboard'); // Updated to match the route in App.js
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
