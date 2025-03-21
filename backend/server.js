@@ -21,7 +21,11 @@ app.use(express.json());
 // Update CORS to allow your Vercel frontend domain
 // Update CORS configuration
 app.use(cors({
-  origin: ['https://grantwise-1sjg36k8d-808dawgs-projects.vercel.app', 'http://localhost:3000'],
+  origin: [
+    'https://grantwise-1sjg36k8d-808dawgs-projects.vercel.app', 
+    'https://grantwise.vercel.app',
+    'http://localhost:3000'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],

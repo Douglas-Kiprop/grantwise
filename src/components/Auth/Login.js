@@ -26,12 +26,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Use the api utility instead of direct axios call with hardcoded URL
       const response = await api.post('/auth/login', formData);
-      login(response.data.token);
-      console.log('Login successful, navigating to dashboard...');
-      navigate('/dashboard');
+      console.log('Login response:', response.data); // Add this to debug
+      
+      if (response.data.token) {
+        login(response.data.token);
+        console.log('Login successful, navigating to dashboard...');
+        
+        // Add a small delay before navigation
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 500);
+      } else {
+        setError('Login failed: No token received');
+      }
     } catch (err) {
+      console.error('Login error details:', err);
       setError(err.response?.data?.message || 'Login failed');
     }
   };
