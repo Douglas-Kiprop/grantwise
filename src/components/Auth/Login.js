@@ -27,16 +27,17 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await api.post('/auth/login', formData);
-      console.log('Login response:', response.data); // Add this to debug
+      console.log('Login response:', response.data);
       
       if (response.data.token) {
         login(response.data.token);
         console.log('Login successful, navigating to dashboard...');
         
-        // Add a small delay before navigation
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 500);
+        // Force navigation with window.location instead of React Router
+        window.location.href = '/dashboard';
+        
+        // The navigate function might not be working properly
+        // navigate('/dashboard');
       } else {
         setError('Login failed: No token received');
       }
