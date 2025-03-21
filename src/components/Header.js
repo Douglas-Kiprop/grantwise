@@ -4,49 +4,51 @@ import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
   const location = useLocation();
-  const { logout } = useAuth(); // Removed 'user' since it's not being used
+  const { logout } = useAuth();
   const isLandingPage = location.pathname === '/';
   
   const headerStyle = {
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     left: 0,
-    width: '100%',
+    right: 0,
     padding: '20px 40px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     zIndex: 1000,
     background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent)',
+    overflow: 'hidden',
+    maxWidth: '100vw'
   };
-
+  
   const logoStyle = {
     color: 'white',
     textDecoration: 'none',
     fontSize: '24px',
     fontWeight: 'bold',
   };
-
+  
   const navStyle = {
     display: 'flex',
     gap: '30px',
-    marginRight: '80px', // Add margin to move links left from the edge
+    marginRight: '80px',
   };
-
+  
   const linkStyle = {
     color: 'white',
     textDecoration: 'none',
     transition: 'color 0.3s ease',
   };
-
+  
   const handleMouseOver = (e) => {
     e.target.style.color = '#ddd';
   };
-
+  
   const handleMouseOut = (e) => {
     e.target.style.color = 'white';
   };
-
+  
   return (
     <header style={headerStyle}>
       <Link to="/" style={logoStyle}>Grantwise</Link>
