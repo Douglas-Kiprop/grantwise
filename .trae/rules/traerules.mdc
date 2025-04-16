@@ -1,0 +1,70 @@
+# GrantWise General Trae Rules
+
+## 1. Task Execution & Tracking
+
+- All work must be guided by the current task list in `.trae/rules/task-list.mdc`.
+- Tasks must be completed sequentially unless otherwise prioritized and documented.
+- After completing a task, update the task list immediately and review the next task.
+- Regularly review completed tasks to ensure quality and completeness.
+
+## 2. Code Quality & Consistency
+
+- Follow consistent code style and formatting across all files (respecting project conventions).
+- Use clear, descriptive variable and function names.
+- Avoid code duplication; refactor shared logic into reusable functions or modules.
+- Write modular, maintainable, and well-structured code.
+- Ensure all code is thoroughly tested before marking a task as complete.
+
+## 3. Documentation
+
+- All new features, endpoints, and modules must be documented.
+- Update API documentation (Swagger/OpenAPI) with every backend change.
+- Update user and developer documentation as features are added or changed.
+
+## 4. Validation & Error Handling
+
+- Validate all user input on both frontend and backend.
+- Implement centralized error handling in the backend.
+- Provide clear, user-friendly error messages in the frontend.
+
+## 5. Security
+
+- Use secure authentication and authorization practices.
+- Never commit secrets, passwords, or sensitive data to the repository.
+- Apply security middleware (helmet, CORS, rate limiting) and keep dependencies up to date.
+- Enforce HTTPS and secure cookies/sessions in production.
+
+## 6. Testing
+
+- Write unit tests for all new backend and frontend logic.
+- Add integration tests for critical user flows and API endpoints.
+- Ensure all tests pass before deploying or merging changes.
+
+## 7. Accessibility & UX
+
+- Ensure all UI components are accessible (ARIA, keyboard navigation, color contrast).
+- Provide loading indicators and feedback for all asynchronous actions.
+- Ensure mobile responsiveness across all pages.
+
+## 8. Performance
+
+- Optimize images and static assets.
+- Use code splitting and lazy loading for large components/pages.
+- Monitor and address performance bottlenecks as the project grows.
+
+## 9. Collaboration & Communication
+
+- Communicate blockers, questions, or changes in task priority promptly.
+- Use clear commit messages and reference related tasks/issues.
+- Review and test code from others before merging.
+
+## 10. Deployment & CI/CD
+
+- Use environment variables for all configuration and secrets.
+- Ensure deployment scripts and Dockerfiles are up to date.
+- Maintain a working CI/CD pipeline for automated testing and deployment.
+
+---
+
+**Note:**  
+These rules are to be strictly followed throughout the project lifecycle. Any deviation must be justified and documented. Regularly review and update these rules as the project evolves.

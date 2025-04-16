@@ -1,0 +1,110 @@
+# GrantWise Implementation Task List
+
+## Backend
+
+### Grant Management
+- [ ] Create Grant model/schema in Mongoose
+- [ ] Implement CRUD endpoints for grants (create, read, update, delete)
+- [ ] Add admin/staff authorization for grant management endpoints
+- [ ] Add validation for grant data (title, amount, deadline, etc.)
+
+### User Authentication
+- [ ] Implement user registration endpoint
+- [ ] Implement user login endpoint with JWT/session support
+- [ ] Implement user logout endpoint
+- [ ] Implement password reset (request, token, reset) endpoints
+- [ ] Add email verification (optional, if required)
+- [ ] Add middleware for authentication and authorization
+
+### Application Management
+- [ ] Add validation for application creation and updates
+- [ ] Prevent duplicate applications for the same grant by the same user
+
+### Notifications & Reminders
+- [ ] Implement notification sending logic (email, in-app)
+- [ ] Store sent notifications in the database for user reference
+- [ ] Add endpoint for users to view their notifications
+
+### Error Handling & Security
+- [ ] Add centralized error handling middleware
+- [ ] Add request validation middleware (e.g., express-validator or Joi)
+- [ ] Add security middleware (helmet, CORS, rate limiting)
+- [ ] Enforce HTTPS and secure cookies/sessions in production
+
+### Analytics & Reporting
+- [ ] Add endpoints for grant analytics (if not already complete)
+- [ ] Add endpoints for user/application statistics (optional)
+
+### Documentation & Testing
+- [ ] Add API documentation (Swagger/OpenAPI)
+- [ ] Add unit tests for models and controllers
+- [ ] Add integration tests for API endpoints
+
+### Deployment
+- [ ] Add Dockerfile for backend
+- [ ] Add deployment scripts/configuration (e.g., for Render, Heroku, or other)
+- [ ] Set up CI/CD pipeline for automated testing and deployment
+
+---
+
+## Frontend
+
+### Authentication UI
+- [ ] Implement registration form and flow
+- [ ] Implement login form and flow
+- [ ] Implement password reset request and reset forms
+- [ ] Implement email verification UI (if required)
+- [ ] Add user feedback for authentication errors/success
+
+### Grant Management UI
+- [ ] Implement admin interface for creating, editing, and deleting grants
+- [ ] Add grant creation/editing forms with validation
+- [ ] Add grant deletion confirmation
+
+### Application Management UI
+- [ ] Implement UI for users to create new applications for grants
+- [ ] Implement UI for users to update or delete their applications
+- [ ] Add UI for users to set reminders and notes on applications
+
+### Notifications UI
+- [ ] Implement notifications/inbox page for users
+- [ ] Show deadline reminders and other notifications in-app
+
+### Grant Detail Page
+- [ ] Implement detailed grant view page with all relevant info and application button
+
+### Profile Management
+- [ ] Implement profile page for users to view and update their information
+- [ ] Add password change functionality
+
+### Dashboard & Analytics
+- [ ] Ensure dashboard displays all relevant analytics and is mobile-friendly
+
+### General UI/UX
+- [ ] Add loading indicators and error messages throughout the app
+- [ ] Ensure all forms have validation and user feedback
+- [ ] Ensure mobile responsiveness and accessibility (ARIA, keyboard navigation)
+
+### Testing
+- [ ] Add unit tests for React components
+- [ ] Add integration tests for user flows
+
+---
+
+## General
+
+### Documentation
+- [ ] Add developer setup and contribution guide
+- [ ] Add user-facing documentation/help pages
+
+### Performance & Optimization
+- [ ] Implement code splitting and lazy loading for large components/pages
+- [ ] Optimize images and static assets
+
+### Accessibility
+- [ ] Audit and improve accessibility across the app
+
+---
+
+**Note:**  
+This task list will be regularly reviewed. As each task is completed, it should be checked off, and the next task will be addressed sequentially.
