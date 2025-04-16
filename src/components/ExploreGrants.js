@@ -1,42 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios'; // Import axios
 
 const ExploreGrants = () => {
   const [grants, setGrants] = useState([]);
 
   useEffect(() => {
-    // Simulated business grants with real images from Pexels
-    const mockGrants = [
-      {
-        id: 5,
-        title: "Small Business Growth Fund",
-        amount: "$7,500",
-        deadline: "2025-08-01",
-        imageUrl: "https://images.pexels.com/photos/3184405/pexels-photo-3184405.jpeg?auto=compress&cs=tinysrgb&w=600"
-      },
-      {
-        id: 6,
-        title: "Tech Startup Accelerator",
-        amount: "$15,000",
-        deadline: "2025-08-15",
-        imageUrl: "https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=600"
-      },
-      {
-        id: 7,
-        title: "Women Entrepreneurs Initiative",
-        amount: "$10,000",
-        deadline: "2025-09-01",
-        imageUrl: "https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=600"
-      },
-      {
-        id: 8,
-        title: "Rural Business Development",
-        amount: "$12,500",
-        deadline: "2025-09-15",
-        imageUrl: "https://images.pexels.com/photos/2422294/pexels-photo-2422294.jpeg?auto=compress&cs=tinysrgb&w=600"
+    // Fetch real business grants from the API
+    const fetchBusinessGrants = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/grants?category=business');
+        setGrants(response.data.slice(0, 4)); // Show up to 4 grants
+      } catch (error) {
+        console.error("Error fetching business grants:", error);
+        setGrants([]); // Set to empty array on error
       }
-    ];
-    setGrants(mockGrants);
+    };
+    fetchBusinessGrants();
   }, []);
 
   const sectionStyle = {
@@ -93,17 +73,23 @@ const ExploreGrants = () => {
       <div style={containerStyle}>
         <h2 style={{ fontSize: '2rem', textAlign: 'center', marginBottom: '20px' }}>Business Grants</h2>
         <div style={gridStyle}>
-          {grants.map((grant, index) => (
-            <div key={index} style={cardStyle}>
-              <img src={grant.imageUrl} alt={grant.title} style={{ width: '100%', borderRadius: '5px' }} />
+          {grants.map((grant) => ( // Use grant._id for key
+            <div key={grant._id} style={cardStyle}>
+              {/* Use a placeholder if imageUrl is not available in your real data */}
+              <img
+                src={grant.imageUrl || 'https://via.placeholder.com/300x140?text=Grant+Image'}
+                alt={grant.title}
+                style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '5px' }}
+              />
               <h3 style={cardTitleStyle}>{grant.title}</h3>
               <p style={cardTextStyle}>
-                Amount: {grant.amount}
+                Amount: {grant.amount} {/* Display amount directly */}
               </p>
               <p style={deadlineStyle}>
-                Deadline: {new Date(grant.deadline).toLocaleDateString()}
+                Deadline: {grant.deadline} {/* Display deadline directly */}
               </p>
-              <Link to={`/grants/${grant.id}`} style={cardLinkStyle}>Learn More</Link>
+              {/* Link to the grant detail page using grant._id */}
+              <Link to={`/grants/${grant._id}`} style={cardLinkStyle}>Learn More</Link>
             </div>
           ))}
         </div>

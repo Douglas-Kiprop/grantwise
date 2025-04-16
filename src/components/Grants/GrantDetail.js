@@ -67,10 +67,10 @@ const GrantDetail = () => {
               </Typography>
               <Box sx={{ my: 3 }}>
                 <Typography variant="h6" gutterBottom>
-                  Requirements
+                  Eligibility
                 </Typography>
                 <Typography variant="body1">
-                  {grant.requirements}
+                  {grant.eligibility}
                 </Typography>
               </Box>
             </Grid>
@@ -84,7 +84,7 @@ const GrantDetail = () => {
                     Amount
                   </Typography>
                   <Typography variant="h5">
-                    ${grant.amount}
+                    {grant.amount}
                   </Typography>
                 </Box>
                 <Box sx={{ my: 2 }}>
@@ -92,7 +92,7 @@ const GrantDetail = () => {
                     Deadline
                   </Typography>
                   <Typography variant="h6">
-                    {new Date(grant.deadline).toLocaleDateString()}
+                    {grant.deadline}
                   </Typography>
                 </Box>
                 <Box sx={{ my: 2 }}>

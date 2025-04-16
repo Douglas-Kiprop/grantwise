@@ -1,0 +1,48 @@
+<svg width="900" height="700" viewBox="0 0 900 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="700" fill="#f7f7fa"/>
+  <!-- Header -->
+  <rect x="0" y="0" width="900" height="60" fill="#2d3e50"/>
+  <text x="30" y="38" font-size="28" fill="#fff" font-family="Arial" font-weight="bold">GrantWise - Grants Listing</text>
+  <!-- Search and Filter -->
+  <rect x="30" y="80" width="840" height="50" rx="8" fill="#fff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="50" y="110" font-size="18" fill="#888" font-family="Arial">🔍 Search grants...</text>
+  <rect x="700" y="90" width="150" height="30" rx="6" fill="#e5e7eb"/>
+  <text x="715" y="110" font-size="16" fill="#444" font-family="Arial">Category ▼</text>
+  <!-- Grant Cards -->
+  <g>
+    <rect x="30" y="150" width="260" height="180" rx="12" fill="#fff" stroke="#d1d5db" stroke-width="1"/>
+    <text x="50" y="180" font-size="18" fill="#2d3e50" font-family="Arial" font-weight="bold">Large Research Grants on Education Program 2025</text>
+    <text x="50" y="205" font-size="15" fill="#444" font-family="Arial">Spencer Foundation</text>
+    <text x="50" y="225" font-size="14" fill="#666" font-family="Arial">Amount: $500,000</text>
+    <text x="50" y="245" font-size="14" fill="#666" font-family="Arial">Deadline: 14-May-25</text>
+    <text x="50" y="265" font-size="14" fill="#666" font-family="Arial">Category: Education</text>
+    <rect x="50" y="280" width="80" height="28" rx="6" fill="#2563eb"/>
+    <text x="60" y="300" font-size="14" fill="#fff" font-family="Arial">View Details</text>
+    <rect x="140" y="280" width="80" height="28" rx="6" fill="#10b981"/>
+    <text x="150" y="300" font-size="14" fill="#fff" font-family="Arial">Apply Now</text>
+  </g>
+  <g>
+    <rect x="320" y="150" width="260" height="180" rx="12" fill="#fff" stroke="#d1d5db" stroke-width="1"/>
+    <text x="340" y="180" font-size="18" fill="#2d3e50" font-family="Arial" font-weight="bold">STEM Research Grant 2025</text>
+    <text x="340" y="205" font-size="15" fill="#444" font-family="Arial">National Science Org</text>
+    <text x="340" y="225" font-size="14" fill="#666" font-family="Arial">Amount: $250,000</text>
+    <text x="340" y="245" font-size="14" fill="#666" font-family="Arial">Deadline: 30-Jun-25</text>
+    <text x="340" y="265" font-size="14" fill="#666" font-family="Arial">Category: Research</text>
+    <rect x="340" y="280" width="80" height="28" rx="6" fill="#2563eb"/>
+    <text x="350" y="300" font-size="14" fill="#fff" font-family="Arial">View Details</text>
+    <rect x="430" y="280" width="80" height="28" rx="6" fill="#10b981"/>
+    <text x="440" y="300" font-size="14" fill="#fff" font-family="Arial">Apply Now</text>
+  </g>
+  <!-- Grant Detail Page -->
+  <rect x="610" y="150" width="260" height="340" rx="12" fill="#fff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="630" y="180" font-size="18" fill="#2d3e50" font-family="Arial" font-weight="bold">Large Research Grants on Education Program 2025</text>
+  <text x="630" y="205" font-size="15" fill="#444" font-family="Arial">Spencer Foundation</text>
+  <text x="630" y="225" font-size="14" fill="#666" font-family="Arial">Amount: $500,000</text>
+  <text x="630" y="245" font-size="14" fill="#666" font-family="Arial">Deadline: 14-May-25</text>
+  <text x="630" y="265" font-size="14" fill="#666" font-family="Arial">Category: Education</text>
+  <text x="630" y="285" font-size="14" fill="#666" font-family="Arial">Status: Active</text>
+  <text x="630" y="305" font-size="14" fill="#666" font-family="Arial">Eligibility: PIs with doctorates affiliated with non-profit…</text>
+  <text x="630" y="325" font-size="14" fill="#666" font-family="Arial">Description: Supports rigorous education research projects…</text>
+  <rect x="630" y="350" width="110" height="32" rx="7" fill="#10b981"/>
+  <text x="645" y="372" font-size="15" fill="#fff" font-family="Arial">Apply Now</text>
+</svg>

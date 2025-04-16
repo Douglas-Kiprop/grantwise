@@ -3,7 +3,16 @@ const Grant = require('../models/Grant');
 // Get all grants
 const getAllGrants = async (req, res) => {
   try {
-    const grants = await Grant.find({});
+    const { category } = req.query; // Get category from query parameters
+
+    let filter = {}; // Initialize an empty filter object
+    if (category && category !== 'all') { // Check if a specific category is provided
+      // Use $in operator to find grants that include the specified category in their array
+      filter.category = { $in: [category] }; // <--- MODIFIED LINE
+    }
+
+    // Use the filter object when finding grants. If filter is empty {}, it finds all.
+    const grants = await Grant.find(filter);
     res.json(grants);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -64,14 +73,16 @@ const deleteGrant = async (req, res) => {
 const getGrantsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
-    
-    // Validate category
-    const validCategories = ['research', 'education', 'arts', 'technology', 'social', 'environmental', 'healthcare', 'business', 'other'];
+
+    // Optional: Validate category - Consider if this list should match your schema enum
+    // or if enum validation is enough.
+    const validCategories = ['research', 'education', 'arts', 'technology', 'social', 'environmental', 'healthcare', 'business', 'ngo', 'other', 'health', 'environment', 'agriculture', 'social justice', 'energy', 'science', 'human rights', 'women and gender', 'economic development', 'civil society', 'social impact', 'sustainable development', 'community development', 'housing', 'employment', 'food', 'conservation', 'media', 'animals and wildlife', 'climate change', 'humanitarian relief']; // Ensure this list is up-to-date
     if (!validCategories.includes(category)) {
-      return res.status(400).json({ message: 'Invalid category' });
+      // return res.status(400).json({ message: 'Invalid category' }); // Keep or remove based on needs
     }
-    
-    const grants = await Grant.find({ category });
+
+    // Use $in operator to find grants where the category array contains the specified category
+    const grants = await Grant.find({ category: { $in: [category] } }); // <--- MODIFIED LINE
     res.json(grants);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -93,18 +104,24 @@ const getCategoryStats = async (req, res) => {
   try {
     const stats = await Grant.aggregate([
       {
+        $unwind: '$category' // <--- ADDED LINE: Deconstruct the category array
+      },
+      {
         $group: {
-          _id: '$category',
+          _id: '$category', // Group by the individual category string
           count: { $sum: 1 },
-          totalAmount: { $sum: '$amount' },
-          avgAmount: { $avg: '$amount' }
+          // Note: Amount calculations might be skewed if a grant belongs to multiple categories.
+          // Decide if you want total/avg amount *per category mention* or need a different approach.
+          // The current approach sums/averages the grant's full amount for each category it belongs to.
+          totalAmount: { $sum: '$amount' }, // Be cautious with interpretation
+          avgAmount: { $avg: '$amount' }    // Be cautious with interpretation
         }
       },
       {
         $sort: { _id: 1 }
       }
     ]);
-    
+
     res.json(stats);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -114,15 +131,14 @@ const getCategoryStats = async (req, res) => {
 // Search and filter grants
 const searchGrants = async (req, res) => {
   try {
-    const { 
-      keyword, 
-      minAmount, 
-      maxAmount, 
+    const {
+      keyword,
+      minAmount,
+      maxAmount,
       category,
-      deadline 
+      deadline
     } = req.query;
-    
-    // Build query
+
     const query = {};
     
     // Keyword search in title and description
@@ -143,7 +159,8 @@ const searchGrants = async (req, res) => {
     
     // Category filter
     if (category) {
-      query.category = category;
+      // Use $in operator for category array matching
+      query.category = { $in: [category] }; // <--- MODIFIED LINE
     }
     
     // Deadline filter (grants with deadlines after the specified date)
@@ -181,9 +198,13 @@ const getGrantAnalytics = async (req, res) => {
     // Category distribution with average amounts
     const categoryAnalysis = await Grant.aggregate([
       {
+        $unwind: '$category' // <--- ADDED LINE: Deconstruct the category array
+      },
+      {
         $group: {
-          _id: '$category',
+          _id: '$category', // Group by the individual category string
           count: { $sum: 1 },
+          // Same caution applies here regarding amount interpretation as in getCategoryStats
           totalAmount: { $sum: '$amount' },
           avgAmount: { $avg: '$amount' },
           maxAmount: { $max: '$amount' },

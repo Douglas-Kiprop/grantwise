@@ -1,65 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Typography, Button, Grid } from '@mui/material'; // Keep Grid
+import { Link } from 'react-router-dom'; // Import Link
 
 const ThreeCardGrants = () => {
-  const [grants, setGrants] = useState([]);
+  const [youthGrants, setYouthGrants] = useState([]);
 
   useEffect(() => {
-    // Updated to have 4 youth grants with real images from Pexels
-    const mockGrants = [
-      {
-        id: 1,
-        title: "Youth Innovation Challenge",
-        amount: "$3,000",
-        deadline: "2025-05-15",
-        imageUrl: "https://images.pexels.com/photos/7103/writing-notes-idea-conference.jpg?auto=compress&cs=tinysrgb&w=600"
-      },
-      {
-        id: 2,
-        title: "Young Entrepreneurs Fund",
-        amount: "$5,500",
-        deadline: "2025-06-01",
-        imageUrl: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=600"
-      },
-      {
-        id: 3,
-        title: "Digital Skills for Youth",
-        amount: "$2,800",
-        deadline: "2025-06-15",
-        imageUrl: "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=600"
-      },
-      {
-        id: 4,
-        title: "Youth Leadership Program",
-        amount: "$4,200",
-        deadline: "2025-07-01",
-        imageUrl: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=600"
+    const fetchYouthGrants = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/grants?category=youth');
+        setYouthGrants(response.data.slice(0, 4));
+      } catch (error) {
+        setYouthGrants([]);
       }
-    ];
-    setGrants(mockGrants);
+    };
+    fetchYouthGrants();
   }, []);
 
-  const sectionStyle = {
-    padding: '40px 20px',
-    backgroundColor: 'white',
-  };
-
-  const containerStyle = {
-    maxWidth: '1200px',
-    margin: '0 auto',
-  };
-
-  const gridStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '20px',
-  };
-
+  // --- Copy styles from ExploreGrants.js ---
   const cardStyle = {
     backgroundColor: '#f5f5f5',
     padding: '15px',
     borderRadius: '5px',
     boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+    height: '100%', // Ensure cards have same height in a row
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between' // Pushes link to bottom
   };
 
   const cardTitleStyle = {
@@ -75,7 +43,7 @@ const ThreeCardGrants = () => {
   };
 
   const deadlineStyle = {
-    color: '#666', // Changed to grey
+    color: '#666',
     fontWeight: 'bold',
     margin: '8px 0',
   };
@@ -86,28 +54,40 @@ const ThreeCardGrants = () => {
     display: 'inline-block',
     marginTop: '10px',
   };
+  // --- End copied styles ---
+
 
   return (
-    <section id="youth-grants" style={sectionStyle}>
-      <div style={containerStyle}>
-        <h2 style={{ fontSize: '2rem', textAlign: 'center', marginBottom: '20px' }}>Youth Grants</h2>
-        <div style={gridStyle}>
-          {grants.map((grant, index) => (
-            <div key={index} style={cardStyle}>
-              <img src={grant.imageUrl} alt={grant.title} style={{ width: '100%', borderRadius: '5px' }} />
-              <h3 style={cardTitleStyle}>{grant.title}</h3>
-              <p style={cardTextStyle}>
-                Amount: {grant.amount}
-              </p>
-              <p style={deadlineStyle}>
-                Deadline: {new Date(grant.deadline).toLocaleDateString()}
-              </p>
-              <Link to={`/grants/${grant.id}`} style={cardLinkStyle}>Learn More</Link>
+    <div style={{ padding: '40px', backgroundColor: 'white' }}> {/* Add section padding/background */}
+      <Typography variant="h4" align="center" gutterBottom style={{ color: '#333' }}> {/* Style title */}
+        Youth Grants
+      </Typography>
+      <Grid container spacing={3} justifyContent="center" style={{ maxWidth: '1200px', margin: '0 auto' }}> {/* Add container style */}
+        {youthGrants.map(grant => (
+          <Grid item xs={12} sm={6} md={3} key={grant._id}>
+            {/* --- Apply ExploreGrants card structure and styles --- */}
+            <div style={cardStyle}>
+              <div> {/* Wrap content to allow link positioning */}
+                <img
+                  src={grant.imageUrl || 'https://via.placeholder.com/300x140?text=Grant+Image'}
+                  alt={grant.title}
+                  style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '5px' }}
+                />
+                <h3 style={cardTitleStyle}>{grant.title}</h3>
+                <p style={cardTextStyle}>
+                  Amount: {grant.amount}
+                </p>
+                <p style={deadlineStyle}>
+                  Deadline: {grant.deadline}
+                </p>
+              </div>
+              <Link to={`/grants/${grant._id}`} style={cardLinkStyle}>Learn More</Link>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
+            {/* --- End card structure --- */}
+          </Grid>
+        ))}
+      </Grid>
+    </div>
   );
 };
 

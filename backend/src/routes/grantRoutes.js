@@ -1,34 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  getAllGrants, 
-  getGrant, 
-  createGrant, 
-  updateGrant, 
-  deleteGrant,
-  getGrantsByCategory,
-  getCategories,
-  getCategoryStats,
-  searchGrants,
-  getGrantAnalytics,
-  getRecommendations
-} = require('../controllers/grantController');
-const { protect, admin } = require('../middleware/auth');
+const grantController = require('../controllers/grantController');
+const { protect } = require('../middleware/auth');
+const adminOnly = require('../middleware/admin');
+const { body } = require('express-validator');
+
+console.log('grantController:', grantController); // Debug log
 
 // Public routes
-router.get('/search', searchGrants);
-router.get('/categories', getCategories);
-router.get('/category/:category', getGrantsByCategory);
-router.get('/stats/categories', getCategoryStats);
-// Add analytics route
-router.get('/analytics', protect, getGrantAnalytics);
-router.get('/recommendations', getRecommendations);
-router.get('/', getAllGrants);
-router.get('/:id', getGrant);
+router.get('/search', grantController.searchGrants);
+router.get('/categories', grantController.getCategories);
+router.get('/category/:category', grantController.getGrantsByCategory);
+router.get('/stats/categories', grantController.getCategoryStats);
+router.get('/analytics', protect, grantController.getGrantAnalytics);
+router.get('/recommendations', grantController.getRecommendations);
+router.get('/', grantController.getAllGrants);
+router.get('/:id', grantController.getGrant);
 
 // Protected routes (require authentication)
-router.post('/', protect, createGrant);
-router.put('/:id', protect, updateGrant);
-router.delete('/:id', protect, deleteGrant);
+// Only admins can create, update, or delete grants
+// Validation middleware for grant data
+const validateGrant = [
+  body('title').notEmpty().withMessage('Title is required'),
+  body('amount').notEmpty().withMessage('Amount is required'),
+  body('deadline').notEmpty().withMessage('Deadline is required'),
+  body('category').notEmpty().withMessage('Category is required'),
+  // Add more validations as needed
+];
+
+router.post('/', protect, adminOnly, validateGrant, grantController.createGrant);
+router.put('/:id', protect, adminOnly, validateGrant, grantController.updateGrant);
+router.delete('/:id', protect, adminOnly, grantController.deleteGrant);
 
 module.exports = router;
