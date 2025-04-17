@@ -32,13 +32,22 @@ const Footer = () => {
     display: 'block',
   };
 
+  // Add style for the logo link to remove default link styling
+  const logoLinkStyle = {
+    color: 'white', // Inherit or set specific color
+    textDecoration: 'none', // Remove underline
+  };
+
   return (
     <footer id="footer" style={footerStyle}>
       <div style={containerStyle}>
         <div style={logoSectionStyle}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            Grantwise
-          </h2>
+          {/* Wrap the H2 with a Link to the homepage */}
+          <Link to="/" style={logoLinkStyle}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: 'rem' }}>
+              Grantwise
+            </h2>
+          </Link>
         </div>
 
         <div style={columnStyle}>
@@ -57,8 +66,9 @@ const Footer = () => {
 
         <div style={columnStyle}>
           <h3 style={{ marginBottom: '1rem' }}>About</h3>
-          <Link to="/about" style={linkStyle}>Our Mission</Link>
-          <Link to="/team" style={linkStyle}>Our Team</Link>
+          {/* Updated About links */}
+          <Link to="/about/mission" style={linkStyle}>Our Mission</Link>
+          <Link to="/about/team" style={linkStyle}>Our Team</Link>
           <Link to="/privacy" style={linkStyle}>Privacy Policy</Link>
         </div>
       </div>

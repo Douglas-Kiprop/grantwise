@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+// import { Link } from 'react-router-dom'; // Remove this line
 import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
-import api from '../../utils/api'; // Import the api utility instead of axios
+// import api from '../../utils/api'; // Remove this line
 
-// Remove or comment out the PasswordStrengthIndicator line in the form
 const Register = () => {
-  const navigate = useNavigate();
+  // Removed navigate (was unused)
   const { register } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
@@ -15,6 +14,7 @@ const Register = () => {
     confirmPassword: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleChange = (e) => {
     setFormData({
@@ -25,24 +25,19 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+    setLoading(true); // Start loading
+    setError('');
     try {
-      // Call the register function from AuthContext directly
       const success = await register({
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
-      
       if (success) {
-        console.log('Registration successful, navigating to dashboard...');
-        // Add a small delay before navigation
         setTimeout(() => {
           window.location.href = '/dashboard';
         }, 500);
@@ -50,8 +45,9 @@ const Register = () => {
         setError('Registration failed');
       }
     } catch (err) {
-      console.error('Registration error details:', err);
       setError(err.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -112,8 +108,9 @@ const Register = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading} // Disable while loading
             >
-              Register
+              {loading ? 'Registering...' : 'Register'}
             </Button>
           </form>
         </Paper>

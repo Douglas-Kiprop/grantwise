@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Removed useNavigate (was unused)
 import { Container, Paper, TextField, Button, Typography, Box, Alert } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api'; // Import the api utility instead of axios
@@ -8,13 +8,14 @@ import api from '../../utils/api'; // Import the api utility instead of axios
 console.log('Current API URL:', process.env.NODE_ENV, process.env.REACT_APP_API_URL);
 
 const Login = () => {
-  const navigate = useNavigate();
+  // Removed navigate (was unused)
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleChange = (e) => {
     setFormData({
@@ -25,25 +26,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
+    setError('');
     try {
       const response = await api.post('/auth/login', formData);
-      console.log('Login response:', response.data);
-      
       if (response.data.token) {
         login(response.data.token);
-        console.log('Login successful, navigating to dashboard...');
-        
-        // Force navigation with window.location instead of React Router
         window.location.href = '/dashboard';
-        
-        // The navigate function might not be working properly
-        // navigate('/dashboard');
       } else {
         setError('Login failed: No token received');
       }
     } catch (err) {
-      console.error('Login error details:', err);
       setError(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -88,8 +84,9 @@ const Login = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading} // Disable while loading
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </Button>
           </form>
         </Paper>

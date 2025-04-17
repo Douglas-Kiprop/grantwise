@@ -136,12 +136,15 @@ const searchGrants = async (req, res) => {
       minAmount,
       maxAmount,
       category,
-      deadline
+      deadline,
+      limit, // <-- Add limit
+      sortBy, // <-- Add sortBy
+      sortOrder // <-- Add sortOrder (e.g., 'asc' or 'desc')
     } = req.query;
 
     const query = {};
-    
-    // Keyword search in title and description
+
+    // Keyword search in title, description, and organization (case-insensitive)
     if (keyword) {
       query.$or = [
         { title: { $regex: keyword, $options: 'i' } },
@@ -149,28 +152,52 @@ const searchGrants = async (req, res) => {
         { organization: { $regex: keyword, $options: 'i' } }
       ];
     }
-    
+
     // Amount range
     if (minAmount || maxAmount) {
       query.amount = {};
       if (minAmount) query.amount.$gte = Number(minAmount);
       if (maxAmount) query.amount.$lte = Number(maxAmount);
     }
-    
-    // Category filter
+
+    // Category filter (case-insensitive)
     if (category) {
-      // Use $in operator for category array matching
-      query.category = { $in: [category] }; // <--- MODIFIED LINE
+      // Use $in with a case-insensitive regex for category array matching
+      query.category = { $in: [new RegExp(`^${category}$`, 'i')] }; // <-- MODIFIED LINE for case-insensitivity
     }
-    
-    // Deadline filter (grants with deadlines after the specified date)
+
+    // Deadline filter (grants with deadlines on or after the specified date)
     if (deadline) {
-      query.deadline = { $gte: new Date(deadline) };
+      // Ensure the deadline is treated as the start of the day
+      const startOfDay = new Date(deadline);
+      startOfDay.setHours(0, 0, 0, 0);
+      query.deadline = { $gte: startOfDay };
     }
-    
-    const grants = await Grant.find(query).sort({ createdAt: -1 });
+
+    // --- Add Sorting Logic ---
+    let sortOptions = {};
+    if (sortBy) {
+      // Default to ascending order unless 'desc' is specified
+      const order = sortOrder === 'desc' ? -1 : 1;
+      sortOptions[sortBy] = order;
+    } else {
+      // Default sort if none provided (e.g., by creation date descending)
+      sortOptions.createdAt = -1;
+    }
+    // --- End Sorting Logic ---
+
+    // --- Add Limit Logic ---
+    const limitValue = limit ? parseInt(limit, 10) : undefined; // Parse limit to integer, default to no limit
+    // --- End Limit Logic ---
+
+    // Apply query, sorting, and limit
+    const grants = await Grant.find(query)
+                              .sort(sortOptions) // Apply sorting
+                              .limit(limitValue); // Apply limit
+
     res.json(grants);
   } catch (error) {
+    console.error('Search grants error:', error); // Log the error for debugging
     res.status(500).json({ message: error.message });
   }
 };
@@ -332,6 +359,54 @@ const getRecommendations = async (req, res) => {
   }
 };
 
+
+// Get top 4 categories with at least 4 grants each for the landing page
+const getLandingPageCategories = async (req, res) => {
+  try {
+    const minGrantsPerCategory = 4; // Minimum grants needed for a category to be featured
+    const numberOfCategories = 4; // Number of categories to feature
+
+    const topCategories = await Grant.aggregate([
+      {
+        $unwind: '$category' // Deconstruct the category array
+      },
+      {
+        $group: {
+          _id: '$category', // Group by category name
+          count: { $sum: 1 } // Count grants in each category
+        }
+      },
+      {
+        $match: {
+          count: { $gte: minGrantsPerCategory } // Filter categories with at least 4 grants
+        }
+      },
+      {
+        $sort: { count: -1 } // Sort by count descending (most popular first)
+      },
+      {
+        $limit: numberOfCategories // Limit to the top 4 categories
+      },
+      {
+        $project: { // Only return the category name
+          _id: 0, // Exclude the default _id field
+          category: '$_id' // Rename _id to category
+        }
+      }
+    ]);
+
+    // Extract just the category names into an array
+    const categoryNames = topCategories.map(cat => cat.category);
+
+    res.json(categoryNames); // Send back ["category1", "category2", "category3", "category4"]
+
+  } catch (error) {
+    console.error('Error fetching landing page categories:', error);
+    res.status(500).json({ message: 'Failed to fetch categories for landing page' });
+  }
+};
+
+
 module.exports = {
   getAllGrants,
   getGrant,
@@ -340,8 +415,10 @@ module.exports = {
   deleteGrant,
   getGrantsByCategory,
   getCategories,
+  // getAllUniqueCategories, // If you added this previously
   getCategoryStats,
   searchGrants,
   getGrantAnalytics,
-  getRecommendations
+  getRecommendations,
+  getLandingPageCategories // <-- Add the new function here
 };
