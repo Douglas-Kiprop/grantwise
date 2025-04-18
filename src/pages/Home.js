@@ -4,9 +4,9 @@ import Header from '../components/Header'; // Ensure this imports your existing 
 import Hero from '../components/Hero';
 import GrantCategories from '../components/GrantCategories';
 import FeaturedGrants from '../components/FeaturedGrants';
-import ThreeCardGrants from '../components/ThreeCardGrants';
-import ExploreGrants from '../components/ExploreGrants';
-import NGOGrants from '../components/NGOGrants';
+import EnvironmentGrants from '../components/EnvironmentGrants';
+import HealthGrants from '../components/HealthGrants';
+import TechnologyGrants from '../components/TechnologyGrants';
 import EducationGrants from '../components/EducationGrants';
 import About from '../components/About';
 import Footer from '../components/Footer'; // Import the Footer component
@@ -22,7 +22,8 @@ const Home = () => {
       setError(null);
       console.log("Home.js: Fetching top categories..."); // <-- Log: Start fetching
       try {
-        const response = await axios.get('/api/grants/landing/categories');
+        const apiBaseUrl = process.env.REACT_APP_API_URL || '';
+        const response = await axios.get(`${apiBaseUrl}/grants/landing/categories`);
         console.log("Home.js: API Response:", response); // <-- Log: Full API response
 
         if (Array.isArray(response.data) && response.data.length > 0) {
@@ -44,10 +45,10 @@ const Home = () => {
   }, []);
 
   const categoryDisplayComponents = [
-      ExploreGrants,
-      NGOGrants,
-      EducationGrants,
-      ThreeCardGrants
+      EnvironmentGrants,   // environment grants
+      HealthGrants,        // health grants
+      TechnologyGrants,    // technology grants
+      EducationGrants      // education grants
   ];
 
   // Remove the mainContentStyle definition entirely

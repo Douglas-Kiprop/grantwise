@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 // import { Typography, Button, Grid, Card, CardContent, CardActions, CardMedia } from '@mui/material';
 
 // Accept categoryName as a prop
-const ThreeCardGrants = ({ categoryName }) => {
-  // Note: This component originally showed 3 cards, we'll fetch 4 but the layout might need adjustment
+const EducationGrants = ({ categoryName }) => {
   const [grants, setGrants] = useState([]);
   // Add loading/error states
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +27,6 @@ const ThreeCardGrants = ({ categoryName }) => {
       try {
         // Add sortBy=deadline and sortOrder=asc to the API request
         const response = await axios.get(`/api/grants/search?category=${encodeURIComponent(categoryName)}&limit=4&sortBy=deadline&sortOrder=asc`);
-        // If you strictly want only 3 cards, slice here: response.data.slice(0, 3)
         setGrants(response.data || []); // Ensure grants is always an array
       } catch (error) {
         console.error(`Error fetching ${categoryName} grants:`, error);
@@ -61,7 +59,7 @@ const ThreeCardGrants = ({ categoryName }) => {
   // Style for the Learn More link
   const cardLinkStyle = { color: '#007bff', textDecoration: 'none', fontWeight: 'normal' };
   const titleStyle = { fontSize: '2rem', textAlign: 'center', marginBottom: '30px', textTransform: 'capitalize' };
-  const messageStyle = { textAlign: 'center', padding: '20px', color: '#555' }; // Message style can remain #555
+  const messageStyle = { textAlign: 'center', padding: '20px', color: '#555' };
   // --- End of Adjusted Style Definitions ---
 
 
@@ -177,4 +175,4 @@ const ThreeCardGrants = ({ categoryName }) => {
   );
 };
 
-export default ThreeCardGrants;
+export default EducationGrants;
