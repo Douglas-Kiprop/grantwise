@@ -9,6 +9,20 @@ import DashboardHeader from '../Dashboard/DashboardHeader';
 
 const GrantList = () => {
   const [grants, setGrants] = useState([]);
+
+  useEffect(() => {
+    const fetchGrants = async () => {
+      try {
+        const apiBaseUrl = process.env.REACT_APP_API_URL || '';
+        const response = await axios.get(`${apiBaseUrl}/grants`); // Updated
+        setGrants(response.data);
+      } catch (error) {
+        console.error('Error fetching grants:', error);
+      }
+    };
+    fetchGrants();
+  }, []);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [categories, setCategories] = useState([]); // State for categories
