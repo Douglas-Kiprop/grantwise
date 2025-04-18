@@ -28,11 +28,14 @@ const GrantList = () => {
   const [categories, setCategories] = useState([]); // State for categories
   const [selectedCategory, setSelectedCategory] = useState('all'); // State for selected filter
 
-  // Fetch categories on component mount
+  // Add apiBaseUrl here
+  const apiBaseUrl = process.env.REACT_APP_API_URL || '';
+
+  // Fetch categories on component mount - FIXED
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/grants/categories');
+        const response = await axios.get(`${apiBaseUrl}/grants/categories`);
         // Ensure 'all' is always an option, even if the API returns it
         const uniqueCategories = ['all', ...new Set(response.data.filter(cat => cat))];
         setCategories(uniqueCategories);
@@ -44,12 +47,12 @@ const GrantList = () => {
     fetchCategories();
   }, []); // Empty dependency array means run once on mount
 
-  // Fetch grants based on selected category
+  // Fetch grants based on selected category - FIXED
   useEffect(() => {
     const fetchGrants = async () => {
       setLoading(true); // Set loading true when fetching starts
       setError(''); // Clear previous errors
-      let url = 'http://localhost:5000/api/grants';
+      let url = `${apiBaseUrl}/grants`;
       // Append category query parameter if a specific category (not 'all') is selected
       if (selectedCategory && selectedCategory !== 'all') {
         url += `?category=${encodeURIComponent(selectedCategory)}`;
@@ -118,7 +121,7 @@ const GrantList = () => {
            </Box>
         ) : (
           <Grid container spacing={3}>
-            {grants.length > 0 ? grants.map((grant) => (
+            {Array.isArray(grants) && grants.length > 0 ? grants.map((grant) => (
               <Grid item xs={12} sm={6} md={4} key={grant._id}>
                 <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <CardMedia
