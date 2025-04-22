@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Temporarily force production URL
-  baseURL: 'https://grantwise.onrender.com/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://grantwise.onrender.com/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'

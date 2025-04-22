@@ -8,6 +8,9 @@ const ExploreGrants = ({ categoryName }) => {
   // Add loading/error states
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Add this line at the top of the component
+  const apiBaseUrl = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
     // Only fetch if categoryName is provided
@@ -24,7 +27,10 @@ const ExploreGrants = ({ categoryName }) => {
       setGrants([]); // Clear previous grants
       try {
         // Add sortBy=deadline and sortOrder=asc to the API request
-        const response = await axios.get(`/api/grants/search?category=${encodeURIComponent(categoryName)}&limit=4&sortBy=deadline&sortOrder=asc`);
+        // ONLY modify the API call
+        const response = await axios.get(
+          `${apiBaseUrl}/grants/search?category=${encodeURIComponent(categoryName)}&limit=4&sortBy=deadline&sortOrder=asc`
+        );
         setGrants(response.data || []); // Ensure grants is always an array
       } catch (error) {
         console.error(`Error fetching ${categoryName} grants:`, error);
@@ -35,7 +41,7 @@ const ExploreGrants = ({ categoryName }) => {
       }
     };
     fetchGrantsByCategory();
-  }, [categoryName]); // Re-run effect if categoryName changes
+  }, [categoryName, apiBaseUrl]); // Re-run effect if categoryName changes
 
   // --- Add the missing style definitions here ---
   // --- Adjust Style Definitions ---

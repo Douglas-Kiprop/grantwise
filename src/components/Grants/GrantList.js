@@ -45,7 +45,7 @@ const GrantList = () => {
       }
     };
     fetchCategories();
-  }, []); // Empty dependency array means run once on mount
+  }, [apiBaseUrl]); // Add apiBaseUrl to the dependency array
 
   // Fetch grants based on selected category - FIXED
   useEffect(() => {
@@ -71,7 +71,7 @@ const GrantList = () => {
     };
 
     fetchGrants();
-  }, [selectedCategory]); // Re-run this effect when selectedCategory changes
+  }, [selectedCategory, apiBaseUrl]); // Add apiBaseUrl to dependencies
 
   // --- Loading and Error states are handled within the return block now ---
   // if (loading) return (

@@ -37,7 +37,8 @@ const FeaturedGrants = () => {
     const fetchAndSetFeaturedGrant = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/grants');
+        const apiBaseUrl = process.env.REACT_APP_API_URL || '';
+        const response = await axios.get(`${apiBaseUrl}/grants`);
         const allGrants = response.data;
         const now = new Date();
 
