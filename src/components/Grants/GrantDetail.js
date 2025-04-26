@@ -14,21 +14,26 @@ const GrantDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Define apiBaseUrl using the environment variable
+  const apiBaseUrl = process.env.REACT_APP_API_URL || ''; // Use empty string as fallback like in GrantList
+
   useEffect(() => {
     const fetchGrant = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/grants/${id}`);
+        // Use apiBaseUrl in the request
+        const response = await axios.get(`${apiBaseUrl}/grants/${id}`);
         setGrant(response.data);
         setError('');
       } catch (err) {
         setError('Failed to load grant details');
+        console.error("Grant detail fetch error:", err); // Added console log for debugging
       } finally {
         setLoading(false);
       }
     };
 
     fetchGrant();
-  }, [id]);
+  }, [id, apiBaseUrl]); // Add apiBaseUrl to the dependency array
 
   if (loading) return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
