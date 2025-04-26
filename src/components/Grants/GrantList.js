@@ -96,17 +96,42 @@ const GrantList = () => {
 
         {/* Category Filter Section */}
         <Box sx={{ mb: 3, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {categories.length > 1 ? categories.map((category) => ( // Only show filters if categories loaded
-            <Chip
-              key={category}
-              label={category.charAt(0).toUpperCase() + category.slice(1)} // Capitalize
-              clickable
-              color={selectedCategory === category ? 'primary' : 'default'}
-              onClick={() => setSelectedCategory(category)}
-              sx={{ textTransform: 'capitalize' }} // Ensure consistent capitalization display
-            />
-          )) : (
-             !loading && <Typography variant="body2">Loading categories...</Typography> // Show loading text if categories aren't ready
+          {categories.length > 1 ? categories.map((category) => { // Only show filters if categories loaded
+            const lowerCat = category.toLowerCase(); // Use lowercase for consistent mapping logic
+
+            // Determine the display label AND the correct filtering value
+            let displayLabel = category.charAt(0).toUpperCase() + category.slice(1); // Default capitalization
+            let filterValue = category; // Default filter value is the original category
+
+            if (lowerCat === 'all') {
+              displayLabel = 'All';
+              filterValue = 'all'; // Keep 'all' as is
+            } else if (lowerCat === 'healthcare') {
+              displayLabel = 'Health';
+              filterValue = 'health'; // Use 'health' for filtering
+            } else if (lowerCat === 'environmental') {
+              displayLabel = 'Environment';
+              filterValue = 'environment'; // Use 'environment' for filtering
+            } else if (lowerCat === 'social') {
+              displayLabel = 'Youth';
+              filterValue = 'youth'; // Use 'youth' for filtering
+            } else if (lowerCat === 'other') {
+              displayLabel = 'Other';
+              filterValue = 'other'; // Use 'other' for filtering
+            }
+            // Add more 'else if' conditions here if other mappings are needed
+
+            return (
+              <Chip
+                key={category} // Keep original category as key for React
+                label={displayLabel} // Use the determined display label
+                clickable
+                color={selectedCategory === filterValue ? 'primary' : 'default'} // Compare with the correct filterValue
+                onClick={() => setSelectedCategory(filterValue)} // Set state to the correct filterValue
+              />
+            );
+          }) : (
+             !loading && categories.length <= 1 && <Typography variant="body2">Loading categories or no filters available...</Typography>
           )}
         </Box>
 

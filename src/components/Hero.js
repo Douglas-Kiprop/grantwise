@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. Import useNavigate
 
 const Hero = () => {
+  const navigate = useNavigate(); // 2. Get the navigate function
+
   const heroStyle = {
     backgroundImage: `url("https://images.pexels.com/photos/15496542/pexels-photo-15496542.jpeg?auto=compress&cs=tinysrgb&w=1920")`,
     backgroundSize: 'cover',
@@ -59,7 +62,9 @@ const Hero = () => {
             e.target.style.color = 'white';
           }}
           onClick={() => {
-            document.getElementById('featured-grants').scrollIntoView({ behavior: 'smooth' });
+            // 3. Change onClick to navigate to '/grants'
+            navigate('/grants');
+            // document.getElementById('featured-grants').scrollIntoView({ behavior: 'smooth' }); // Remove this line
           }}
         >
           Explore Now
